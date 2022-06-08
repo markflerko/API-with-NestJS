@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
-import { PostsModule } from './posts/posts.module';
+import { DatabaseController } from './database.controller';
+import { DatabaseService } from './database.service';
 
 @Module({
   imports: [
-    PostsModule,
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: () => ({
         type: 'postgres',
         host: 'localhost',
@@ -20,9 +20,8 @@ import { PostsModule } from './posts/posts.module';
         synchronize: true,
       }),
     }),
-    DatabaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [DatabaseService],
+  controllers: [DatabaseController],
 })
-export class AppModule {}
+export class DatabaseModule {}
