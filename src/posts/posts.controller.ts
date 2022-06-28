@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
+import { FindOneParams } from 'src/utils/findOneParams';
 import { CreatePostDto } from './dto/create-port.dto';
 import { UpdatePostDto } from './dto/update-port.dto';
 import { PostsService } from './posts.service';
@@ -23,8 +24,8 @@ export class PostsController {
   }
 
   @Get(':id')
-  getPostById(@Param('id') id: number) {
-    return this.postsService.getPostById(id);
+  getPostById(@Param() { id }: FindOneParams) {
+    return this.postsService.getPostById(Number(id));
   }
 
   @Post()

@@ -1,7 +1,8 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
 
 async function bootstrap() {
   const PORT = +process.env.PORT || 5000;
@@ -10,11 +11,15 @@ async function bootstrap() {
     logger: ['verbose', 'log', 'error'],
   });
 
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
+
   app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      skipMissingProperties: true,
     }),
   );
 
