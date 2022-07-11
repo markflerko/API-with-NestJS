@@ -64,7 +64,7 @@
     "jest": "^27.3.0",
     "prettier": "^2.4.1",
     "source-map-support": "^0.5.20",
-    "supertest": "^6.1.6",
+    "supertest": "^6.2.4",
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.3.0",
@@ -78,7 +78,9 @@
       "ts"
     ],
     "rootDir": "./",
-    "modulePaths": ["<rootDir>"],
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
