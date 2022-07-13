@@ -7,6 +7,7 @@ import { CategoryModule } from './category/category.module';
 import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     AuthenticationModule,
     CategoryModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
