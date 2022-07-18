@@ -1,6 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilesService } from 'src/files/files.service';
+import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { Repository } from 'typeorm';
 import CreateUserDto from './dto/create-user.dto';
 import User from './user.entity';
@@ -11,7 +18,46 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly filesService: FilesService,
+    private readonly privateFilesService: PrivateFilesService,
   ) {}
+
+  async getAllPrivateFiles(userId: number) {
+    const userWithFiles = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['files'],
+    });
+
+    if (userWithFiles) {
+      return Promise.all(
+        userWithFiles.files.map(async (file) => {
+          const url = await this.privateFilesService.generatePresignedUrl(
+            file.key,
+          );
+          return {
+            ...file,
+            url,
+          };
+        }),
+      );
+    }
+    throw new NotFoundException('User with this id does not exist');
+  }
+
+  async getPrivateFile(userId: number, fileId: number) {
+    const file = await this.privateFilesService.getPrivateFile(fileId);
+    if (file.info.owner.id === userId) {
+      return file;
+    }
+    throw new UnauthorizedException();
+  }
+
+  async addPrivateFile(userId: number, imageBuffer: Buffer, filename: string) {
+    return this.privateFilesService.uploadPrivateFile(
+      imageBuffer,
+      userId,
+      filename,
+    );
+  }
 
   async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
     const user = await this.getById(userId);

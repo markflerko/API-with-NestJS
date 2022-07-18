@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { S3 } from 'aws-sdk';
 import { Repository } from 'typeorm';
@@ -29,19 +29,11 @@ export class FilesService {
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
     const s3 = new S3();
     const uploadResult = await s3
-      .upload(
-        {
-          Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
-          Body: dataBuffer,
-          Key: `${uuid()}-${filename}`,
-        },
-        (err, data) => {
-          if (err) {
-            Logger.error(err);
-          }
-          Logger.verbose(data);
-        },
-      )
+      .upload({
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Body: dataBuffer,
+        Key: `${uuid()}-${filename}`,
+      })
       .promise();
 
     const newFile = this.publicFilesRepository.create({

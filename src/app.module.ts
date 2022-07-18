@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
+import { PrivateFilesModule } from './private-files/private-files.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FilesModule } from './files/files.module';
     AuthenticationModule,
     CategoryModule,
     FilesModule,
+    PrivateFilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
