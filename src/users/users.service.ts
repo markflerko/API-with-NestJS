@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
 import { Repository } from 'typeorm';
@@ -20,6 +21,19 @@ export class UsersService {
     private readonly filesService: FilesService,
     private readonly privateFilesService: PrivateFilesService,
   ) {}
+
+  async removeRefreshToken(userId: number) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken,
+    });
+  }
 
   async getAllPrivateFiles(userId: number) {
     const userWithFiles = await this.usersRepository.findOne({
@@ -100,6 +114,19 @@ export class UsersService {
       'User with this id does not exist',
       HttpStatus.NOT_FOUND,
     );
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.getById(userId);
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
   }
 
   async getByEmail(email: string) {

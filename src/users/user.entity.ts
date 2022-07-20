@@ -20,6 +20,12 @@ class User {
   @Column({ unique: true })
   public email: string;
 
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public currentHashedRefreshToken?: string;
+
   @Column()
   public name: string;
 
