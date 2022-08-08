@@ -3,6 +3,7 @@ import User from 'src/users/user.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -11,6 +12,9 @@ import {
 
 @Entity()
 class Post {
+  @Column('text', { array: true })
+  public paragraphs: string[];
+
   @PrimaryGeneratedColumn()
   public id?: number;
 
@@ -23,6 +27,7 @@ class Post {
   @Column({ nullable: true })
   public category?: string;
 
+  @Index('post_authorId_index')
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 

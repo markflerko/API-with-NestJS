@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import CreateUserDto from './dto/create-user.dto';
 import User from './user.entity';
 
@@ -20,7 +21,36 @@ export class UsersService {
     private usersRepository: Repository<User>,
     private readonly filesService: FilesService,
     private readonly privateFilesService: PrivateFilesService,
+    private dataSource: DataSource,
   ) {}
+
+  async deleteAvatar(userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    const user = await this.getById(userId);
+    const fileId = user.avatar?.id;
+    if (fileId) {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      try {
+        await queryRunner.manager.update(User, userId, {
+          ...user,
+          avatar: null,
+        });
+        await this.filesService.deletePublicFileWithQueryRunner(
+          fileId,
+          queryRunner,
+        );
+        await queryRunner.commitTransaction();
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException();
+      } finally {
+        await queryRunner.release();
+      }
+    }
+  }
 
   async removeRefreshToken(userId: number) {
     return this.usersRepository.update(userId, {
@@ -91,18 +121,6 @@ export class UsersService {
       avatar,
     });
     return avatar;
-  }
-
-  async deleteAvatar(userId: number) {
-    const user = await this.getById(userId);
-    const fileId = user.avatar?.id;
-    if (fileId) {
-      await this.usersRepository.update(userId, {
-        ...user,
-        avatar: null,
-      });
-      await this.filesService.deletePublicFile(fileId);
-    }
   }
 
   async getById(id: number) {

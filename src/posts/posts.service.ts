@@ -14,6 +14,13 @@ export class PostsService {
     private postsRepository: Repository<Post>,
   ) {}
 
+  async getPostsWithParagraph(paragraph: string) {
+    return this.postsRepository.query(
+      'SELECT * from post WHERE $1 = ANY(paragraphs)',
+      [paragraph],
+    );
+  }
+
   getAllPosts() {
     return this.postsRepository.find({ relations: ['author'] });
   }
