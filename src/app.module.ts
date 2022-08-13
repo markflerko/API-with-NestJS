@@ -10,6 +10,7 @@ import { PostsModule } from './posts/posts.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module';
     CategoryModule,
     FilesModule,
     PrivateFilesModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
