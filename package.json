@@ -32,6 +32,8 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/passport-jwt": "^3.0.6",
+    "amqp-connection-manager": "^4.1.6",
+    "amqplib": "^0.10.2",
     "aws-sdk": "^2.1173.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
