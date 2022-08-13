@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/users/user.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, MoreThan, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-port.dto';
 import { UpdatePostDto } from './dto/update-port.dto';
 import PostNotFoundException from './exceptions/postNotFund.exception';
@@ -14,15 +14,35 @@ export class PostsService {
     private postsRepository: Repository<Post>,
   ) {}
 
+  async getAllPosts(offset?: number, limit?: number, startId?: number) {
+    const where: FindManyOptions<Post>['where'] = {};
+    let separateCount = 0;
+    if (startId) {
+      where.id = MoreThan(startId);
+      separateCount = await this.postsRepository.count();
+    }
+
+    const [items, count] = await this.postsRepository.findAndCount({
+      where,
+      relations: ['author'],
+      order: {
+        id: 'ASC',
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    return {
+      items,
+      count: startId ? separateCount : count,
+    };
+  }
+
   async getPostsWithParagraph(paragraph: string) {
     return this.postsRepository.query(
       'SELECT * from post WHERE $1 = ANY(paragraphs)',
       [paragraph],
     );
-  }
-
-  getAllPosts() {
-    return this.postsRepository.find({ relations: ['author'] });
   }
 
   async getPostById(id: number) {
