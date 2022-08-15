@@ -14,6 +14,7 @@ import { PrivateFilesModule } from './private-files/private-files.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
 import { EmailScheduleModule } from './email-schedule/email-schedule.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { EmailScheduleModule } from './email-schedule/email-schedule.module';
     CommentsModule,
     EmailModule,
     EmailScheduleModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

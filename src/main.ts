@@ -4,7 +4,6 @@ import { config } from 'aws-sdk';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
-import { runInCluster } from './utils/runInCluster';
 
 async function bootstrap() {
   const PORT = +process.env.PORT || 5000;
@@ -35,4 +34,5 @@ async function bootstrap() {
     Logger.log(`Server is running on PORT: ${PORT}`);
   });
 }
-runInCluster(bootstrap);
+// runInCluster(bootstrap);
+bootstrap();
