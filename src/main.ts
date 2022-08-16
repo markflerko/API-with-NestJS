@@ -2,6 +2,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { config } from 'aws-sdk';
 import * as cookieParser from 'cookie-parser';
+import * as cors from 'cors';
 import { AppModule } from './app.module';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
 
@@ -16,6 +17,14 @@ async function bootstrap() {
   app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
 
   app.use(cookieParser());
+  // app.use(
+  //   cors({
+  //     credentials: true,
+  //     origin: function (origin, callback) {
+  //       return callback(null, true);
+  //     },
+  //   }),
+  // );
 
   app.useGlobalPipes(
     new ValidationPipe({

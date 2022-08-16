@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as redisStore from 'cache-manager-redis-store';
 import Post from './post.entity';
 import { PostsController } from './posts.controller';
+import { PostsResolver } from './posts.resolver';
 import { PostsService } from './posts.service';
 
 @Module({
@@ -18,6 +19,6 @@ import { PostsService } from './posts.service';
     TypeOrmModule.forFeature([Post]),
   ],
   controllers: [PostsController],
-  providers: [PostsService],
+  providers: [PostsService, PostsResolver],
 })
 export class PostsModule {}
