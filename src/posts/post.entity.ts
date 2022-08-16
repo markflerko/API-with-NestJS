@@ -2,6 +2,7 @@ import Category from 'src/category/category.entity';
 import User from 'src/users/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinTable,
@@ -15,8 +16,17 @@ import Comment from '../comments/comment.entity';
 
 @Entity()
 class Post {
+  @Column({
+    type: 'timestamp',
+    nullable: true,
+  })
+  scheduledDate?: Date;
+
   @Column('text', { array: true })
   public paragraphs: string[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 
   @PrimaryGeneratedColumn()
   public id?: number;

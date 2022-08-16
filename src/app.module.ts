@@ -16,9 +16,10 @@ import { EmailModule } from './email/email.module';
 import { FilesModule } from './files/files.module';
 import { PostsModule } from './posts/posts.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
+import { PubSubModule } from './pub-sub/pub-sub.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
-import { PubSubModule } from './pub-sub/pub-sub.module';
+import { Timestamp } from './utils/scalars/timestamp.scalar';
 
 @Module({
   imports: [
@@ -27,6 +28,9 @@ import { PubSubModule } from './pub-sub/pub-sub.module';
       playground: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       installSubscriptionHandlers: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
     ScheduleModule.forRoot(),
     SubscribersModule,
@@ -47,6 +51,6 @@ import { PubSubModule } from './pub-sub/pub-sub.module';
     PubSubModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Timestamp],
 })
 export class AppModule {}

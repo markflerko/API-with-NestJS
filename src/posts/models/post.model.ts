@@ -6,6 +6,12 @@ export class Post {
   @Field(() => Int)
   id: number;
 
+  @Field({ nullable: true })
+  scheduledDate?: Date;
+
+  @Field()
+  createdAt: Date;
+
   @Field(() => Int)
   authorId: number;
 
