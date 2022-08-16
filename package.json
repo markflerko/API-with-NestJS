@@ -59,6 +59,7 @@
     "dataloader": "^2.1.0",
     "graphql": "^16.5.0",
     "graphql-parse-resolve-info": "^4.12.3",
+    "graphql-redis-subscriptions": "^2.5.0",
     "graphql-tools": "^8.3.3",
     "grpc": "^1.24.11",
     "nodemailer": "^6.7.8",

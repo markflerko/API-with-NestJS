@@ -18,6 +18,7 @@ import { PostsModule } from './posts/posts.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
+import { PubSubModule } from './pub-sub/pub-sub.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module';
       driver: ApolloDriver,
       playground: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      installSubscriptionHandlers: true,
     }),
     ScheduleModule.forRoot(),
     SubscribersModule,
@@ -42,6 +44,7 @@ import { UsersModule } from './users/users.module';
     EmailModule,
     EmailScheduleModule,
     ChatModule,
+    PubSubModule,
   ],
   controllers: [AppController],
   providers: [AppService],

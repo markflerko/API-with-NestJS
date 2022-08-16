@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -6,6 +6,7 @@ import {
   Mutation,
   Query,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 import {
@@ -13,19 +14,37 @@ import {
   ResolveTree,
   simplifyParsedResolveInfoFragmentWithType,
 } from 'graphql-parse-resolve-info';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { PUB_SUB } from 'src/pub-sub/pub-sub.module';
 import { GraphqlJwtAuthGuard } from '../authentication/graphql-jwt-auth.guard';
 import RequestWithUser from '../authentication/requestWithUser.interface';
 import { CreatePostInput } from './inputs/post.input';
-import PostsLoaders from './loaders/posts.loaders';
 import { Post } from './models/post.model';
 import { PostsService } from './posts.service';
+
+const POST_ADDED_EVENT = 'postAdded';
 
 @Resolver(() => Post)
 export class PostsResolver {
   constructor(
     private postsService: PostsService,
-    private postsLoaders: PostsLoaders,
+    @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
+
+  @Subscription(() => Post, {
+    filter: (payload, variables) => {
+      return payload.postAdded.title === 'Hello world!';
+    },
+    resolve: (value) => {
+      return {
+        ...value.postAdded,
+        title: `Title: ${value.postAdded.title}`,
+      };
+    },
+  })
+  postAdded() {
+    return this.pubSub.asyncIterator(POST_ADDED_EVENT);
+  }
 
   @Query(() => [Post])
   async posts(@Info() info: GraphQLResolveInfo) {
@@ -49,7 +68,12 @@ export class PostsResolver {
     @Args('input') createPostInput: CreatePostInput,
     @Context() context: { req: RequestWithUser },
   ) {
-    return this.postsService.createPost(createPostInput, context.req.user);
+    const newPost = await this.postsService.createPost(
+      createPostInput,
+      context.req.user,
+    );
+    this.pubSub.publish(POST_ADDED_EVENT, { postAdded: newPost });
+    return newPost;
   }
 
   // @ResolveField('author', () => User)
