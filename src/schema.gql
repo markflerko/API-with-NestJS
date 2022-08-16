@@ -2,8 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: Int!
+  email: String!
+}
+
 type Post {
   id: Int!
+  authorId: Int!
+  author: User!
   title: String!
   paragraphs: [String!]!
 }

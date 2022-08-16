@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import CreateUserDto from './dto/create-user.dto';
 import User from './user.entity';
 
@@ -23,6 +23,12 @@ export class UsersService {
     private readonly privateFilesService: PrivateFilesService,
     private dataSource: DataSource,
   ) {}
+
+  async getByIds(ids: number[]) {
+    return this.usersRepository.find({
+      where: { id: In(ids) },
+    });
+  }
 
   async deleteAvatar(userId: number) {
     const queryRunner = this.dataSource.createQueryRunner();

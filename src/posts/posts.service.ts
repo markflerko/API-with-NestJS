@@ -17,6 +17,41 @@ export class PostsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  async getPosts(
+    offset?: number,
+    limit?: number,
+    startId?: number,
+    options?: FindManyOptions<Post>,
+  ) {
+    const where: FindManyOptions<Post>['where'] = {};
+    let separateCount = 0;
+    if (startId) {
+      where.id = MoreThan(startId);
+      separateCount = await this.postsRepository.count();
+    }
+
+    const [items, count] = await this.postsRepository.findAndCount({
+      where,
+      order: {
+        id: 'ASC',
+      },
+      skip: offset,
+      take: limit,
+      ...options,
+    });
+
+    return {
+      items,
+      count: startId ? separateCount : count,
+    };
+  }
+
+  async getPostsWithAuthors(offset?: number, limit?: number, startId?: number) {
+    return this.getPosts(offset, limit, startId, {
+      relations: ['author'],
+    });
+  }
+
   async clearCache() {
     const keys: string[] = await this.cacheManager.store.keys();
     keys.forEach((key) => {

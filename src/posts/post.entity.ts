@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import Comment from '../comments/comment.entity';
 
@@ -32,6 +33,9 @@ class Post {
   @Index('post_authorId_index')
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
+
+  @RelationId((post: Post) => post.author)
+  public authorId: number;
 
   @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable()
