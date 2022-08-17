@@ -35,18 +35,6 @@ services:
     env_file:
       - ./rabbitmq.env
 
-  pgadmin:
-    links:
-      - postgres:postgres
-    image: dpage/pgadmin4
-    ports:
-      - '8080:80'
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=markflerko@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=pass123
-    networks:
-      - postgres
-
 networks:
   postgres:
     driver: bridge
