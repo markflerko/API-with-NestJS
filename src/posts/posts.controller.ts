@@ -14,7 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
+import JwtTwoFactorGuard from 'src/authentication/jwt-two-factor.guard';
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import { PaginationParams } from 'src/types/paginationParams';
 import { FindOneParams } from 'src/utils/findOneParams';
@@ -47,7 +47,8 @@ export class PostsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthenticationGuard)
+  // @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async createPost(@Body() dto: CreatePostDto, @Req() req: RequestWithUser) {
     return this.postsService.createPost(dto, req.user);
   }

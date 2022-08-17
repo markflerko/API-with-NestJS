@@ -5,10 +5,8 @@ import {
   HttpCode,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { LocalAuthenticationGuard } from './authentication.guard';
 import { AuthenticationService } from './authentication.service';
@@ -62,7 +60,7 @@ export class AuthenticationController {
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
-  async logIn(@Req() request: RequestWithUser, @Res() response: Response) {
+  async logIn(@Req() request: RequestWithUser) {
     const { user } = request;
     const accessTokenCookie =
       this.authenticationService.getCookieWithJwtAccessToken(user.id);
@@ -71,10 +69,15 @@ export class AuthenticationController {
 
     await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
 
-    response.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
+    request.res.setHeader('Set-Cookie', [
+      accessTokenCookie,
+      refreshTokenCookie,
+    ]);
 
-    user.password = undefined;
-    user.currentHashedRefreshToken = undefined;
-    return response.send(user);
+    if (user.isTwoFactorAuthenticationEnabled) {
+      return;
+    }
+
+    return user;
   }
 }

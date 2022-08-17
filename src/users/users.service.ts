@@ -24,6 +24,18 @@ export class UsersService {
     private dataSource: DataSource,
   ) {}
 
+  async turnOnTwoFactorAuthentication(userId: number) {
+    return this.usersRepository.update(userId, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }
+
+  async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
+    return this.usersRepository.update(userId, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
   async getByIds(ids: number[]) {
     return this.usersRepository.find({
       where: { id: In(ids) },
