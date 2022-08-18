@@ -17,6 +17,9 @@ class User {
   @PrimaryGeneratedColumn()
   public id?: number;
 
+  @Column()
+  public stripeCustomerId: string;
+
   @Column({ default: false })
   public isTwoFactorAuthenticationEnabled?: boolean;
 

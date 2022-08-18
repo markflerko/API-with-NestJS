@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
+import StripeService from 'src/stripe/stripe.service';
 import { DataSource, In, Repository } from 'typeorm';
 import CreateUserDto from './dto/create-user.dto';
 import User from './user.entity';
@@ -22,6 +23,7 @@ export class UsersService {
     private readonly filesService: FilesService,
     private readonly privateFilesService: PrivateFilesService,
     private dataSource: DataSource,
+    private stripeService: StripeService,
   ) {}
 
   async turnOnTwoFactorAuthentication(userId: number) {
@@ -179,7 +181,16 @@ export class UsersService {
   }
 
   async create(userData: CreateUserDto) {
-    const newUser = await this.usersRepository.create(userData);
+    const stripeCustomer = await this.stripeService.createCustomer(
+      userData.name,
+      userData.email,
+    );
+
+    const newUser = await this.usersRepository.create({
+      ...userData,
+      stripeCustomerId: stripeCustomer.id,
+    });
+
     await this.usersRepository.save(newUser);
     return newUser;
   }

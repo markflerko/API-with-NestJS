@@ -2,7 +2,6 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { config } from 'aws-sdk';
 import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
 import { AppModule } from './app.module';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
 
@@ -32,6 +31,11 @@ async function bootstrap() {
       skipMissingProperties: true,
     }),
   );
+
+  app.enableCors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  });
 
   config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

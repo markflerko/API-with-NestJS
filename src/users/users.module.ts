@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule } from 'src/files/files.module';
 import { PrivateFilesModule } from 'src/private-files/private-files.module';
+import { StripeModule } from 'src/stripe/stripe.module';
 import Address from './address.entity';
 import User from './user.entity';
 import { UsersController } from './users.controller';
@@ -12,6 +13,7 @@ import { UsersService } from './users.service';
     TypeOrmModule.forFeature([User, Address]),
     FilesModule,
     PrivateFilesModule,
+    StripeModule,
   ],
   providers: [UsersService],
   exports: [UsersService],

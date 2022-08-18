@@ -1,6 +1,4 @@
-import User from '../../users/user.entity';
-
-const mockedUser: User = {
+const mockedUser = {
   id: 1,
   email: 'user@email.com',
   name: 'John',
@@ -11,7 +9,6 @@ const mockedUser: User = {
     city: 'cityName',
     country: 'countryName',
   },
-  files: [],
 };
 
 export default mockedUser;
