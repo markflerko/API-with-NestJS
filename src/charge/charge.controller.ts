@@ -14,7 +14,7 @@ export default class ChargeController {
     @Body() charge: CreateChargeDto,
     @Req() request: RequestWithUser,
   ) {
-    await this.stripeService.charge(
+    return this.stripeService.charge(
       charge.amount,
       charge.paymentMethodId,
       request.user.stripeCustomerId,

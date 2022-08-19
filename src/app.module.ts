@@ -24,6 +24,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { UsersModule } from './users/users.module';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
+import { CreditCardsModule } from './credit-cards/credit-cards.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { Timestamp } from './utils/scalars/timestamp.scalar';
     PubSubModule,
     OptimizeModule,
     StripeModule,
+    CreditCardsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],

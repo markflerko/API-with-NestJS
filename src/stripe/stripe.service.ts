@@ -11,6 +11,20 @@ export class StripeService {
     });
   }
 
+  public async listCreditCards(customerId: string) {
+    return this.stripe.paymentMethods.list({
+      customer: customerId,
+      type: 'card',
+    });
+  }
+
+  public async attachCreditCard(paymentMethodId: string, customerId: string) {
+    return this.stripe.setupIntents.create({
+      customer: customerId,
+      payment_method: paymentMethodId,
+    });
+  }
+
   public async charge(
     amount: number,
     paymentMethodId: string,
@@ -21,6 +35,7 @@ export class StripeService {
       customer: customerId,
       payment_method: paymentMethodId,
       currency: process.env.STRIPE_CURRENCY,
+      off_session: true,
       confirm: true,
     });
   }
