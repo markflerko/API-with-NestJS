@@ -1,12 +1,34 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 import RequestWithUser from '../authentication/requestWithUser.interface';
 import StripeService from '../stripe/stripe.service';
 import AddCreditCardDto from './dto/addCreditCardDto';
+import SetDefaultCreditCardDto from './dto/setDefaultCreditCard.dto';
 
 @Controller('credit-cards')
 export class CreditCardsController {
   constructor(private readonly stripeService: StripeService) {}
+
+  @Post('default')
+  @HttpCode(200)
+  @UseGuards(JwtAuthenticationGuard)
+  async setDefaultCard(
+    @Body() creditCard: SetDefaultCreditCardDto,
+    @Req() request: RequestWithUser,
+  ) {
+    await this.stripeService.setDefaultCreditCard(
+      creditCard.paymentMethodId,
+      request.user.stripeCustomerId,
+    );
+  }
 
   @Post()
   @UseGuards(JwtAuthenticationGuard)

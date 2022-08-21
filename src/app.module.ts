@@ -12,19 +12,19 @@ import { CategoryModule } from './category/category.module';
 import { ChargeModule } from './charge/charge.module';
 import { ChatModule } from './chat/chat.module';
 import { CommentsModule } from './comments/comments.module';
+import { CreditCardsModule } from './credit-cards/credit-cards.module';
 import { DatabaseModule } from './database/database.module';
 import { EmailScheduleModule } from './email-schedule/email-schedule.module';
 import { EmailModule } from './email/email.module';
 import { FilesModule } from './files/files.module';
-import { OptimizeModule } from './optimize/optimize.module';
 import { PostsModule } from './posts/posts.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { PubSubModule } from './pub-sub/pub-sub.module';
 import { StripeModule } from './stripe/stripe.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UsersModule } from './users/users.module';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
-import { CreditCardsModule } from './credit-cards/credit-cards.module';
 
 @Module({
   imports: [
@@ -63,9 +63,9 @@ import { CreditCardsModule } from './credit-cards/credit-cards.module';
     EmailScheduleModule,
     ChatModule,
     PubSubModule,
-    OptimizeModule,
     StripeModule,
     CreditCardsModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],
