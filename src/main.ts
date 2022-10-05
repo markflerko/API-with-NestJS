@@ -4,6 +4,7 @@ import { config } from 'aws-sdk';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
+import rawBodyMiddleware from './utils/rawBody.middleware';
 
 async function bootstrap() {
   const PORT = +process.env.PORT || 5000;
@@ -13,6 +14,9 @@ async function bootstrap() {
   });
 
   const { httpAdapter } = app.get(HttpAdapterHost);
+
+  app.use(rawBodyMiddleware());
+
   app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
 
   app.use(cookieParser());

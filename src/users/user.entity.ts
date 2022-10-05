@@ -17,6 +17,9 @@ class User {
   @PrimaryGeneratedColumn()
   public id?: number;
 
+  @Column({ nullable: true })
+  public monthlySubscriptionStatus?: string;
+
   @Column()
   public stripeCustomerId: string;
 

@@ -26,6 +26,16 @@ export class UsersService {
     private stripeService: StripeService,
   ) {}
 
+  async updateMonthlySubscriptionStatus(
+    stripeCustomerId: string,
+    monthlySubscriptionStatus: string,
+  ) {
+    return this.usersRepository.update(
+      { stripeCustomerId },
+      { monthlySubscriptionStatus },
+    );
+  }
+
   async turnOnTwoFactorAuthentication(userId: number) {
     return this.usersRepository.update(userId, {
       isTwoFactorAuthenticationEnabled: true,

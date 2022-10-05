@@ -16,6 +16,16 @@ export class StripeService {
     });
   }
 
+  public async constructEventFromPayload(signature: string, payload: Buffer) {
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    return this.stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      webhookSecret,
+    );
+  }
+
   public async createSubscription(priceId: string, customerId: string) {
     try {
       return await this.stripe.subscriptions.create({

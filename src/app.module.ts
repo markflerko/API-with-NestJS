@@ -25,6 +25,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UsersModule } from './users/users.module';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
+import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { Timestamp } from './utils/scalars/timestamp.scalar';
     StripeModule,
     CreditCardsModule,
     SubscriptionsModule,
+    StripeWebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],
