@@ -3,18 +3,18 @@ import {
   Controller,
   Headers,
   Post,
-  Req,
+  Req
 } from '@nestjs/common';
 import StripeService from 'src/stripe/stripe.service';
 import { UsersService } from 'src/users/users.service';
-import Stripe from 'stripe';
 import RequestWithRawBody from './requestWithRawBody.interface';
+import { StripeWebhookService } from './stripe-webhook.service';
 
 @Controller('webhook')
 export class StripeWebhookController {
   constructor(
     private readonly stripeService: StripeService,
-    private readonly usersService: UsersService,
+    private readonly stripeWebhookService: StripeWebhookService,
   ) {}
 
   @Post()
@@ -31,19 +31,21 @@ export class StripeWebhookController {
       request.rawBody,
     );
 
-    // if (
-    //   event.type === 'customer.subscription.updated' ||
-    //   event.type === 'customer.subscription.created'
-    // ) {
-    //   const data = event.data.object as Stripe.Subscription;
+    if (
+      event.type === 'customer.subscription.updated' ||
+      event.type === 'customer.subscription.created'
+    ) {
+      return this.stripeWebhookService.processSubscriptionUpdate(event);
 
-    //   const customerId: string = data.customer as string;
-    //   const subscriptionStatus = data.status;
+      // const data = event.data.object as Stripe.Subscription;
 
-    //   await this.usersService.updateMonthlySubscriptionStatus(
-    //     customerId,
-    //     subscriptionStatus,
-    //   );
-    // }
+      // const customerId: string = data.customer as string;
+      // const subscriptionStatus = data.status;
+
+      // await this.usersService.updateMonthlySubscriptionStatus(
+      //   customerId,
+      //   subscriptionStatus,
+      // );
+    }
   }
 }
