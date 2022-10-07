@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { EmailConfirmationService } from 'src/email-confirmation/email-confirmation.service';
 import { UsersService } from 'src/users/users.service';
 import { LocalAuthenticationGuard } from './authentication.guard';
 import { AuthenticationService } from './authentication.service';
@@ -20,6 +21,7 @@ export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
     private readonly usersService: UsersService,
+    private readonly emailConfirmationService: EmailConfirmationService,
   ) {}
 
   @UseGuards(JwtRefreshGuard)
@@ -54,7 +56,11 @@ export class AuthenticationController {
 
   @Post('register')
   async register(@Body() registrationData: RegisterDto) {
-    return this.authenticationService.register(registrationData);
+    const user = this.authenticationService.register(registrationData);
+    await this.emailConfirmationService.sendVerificationLink(
+      registrationData.email,
+    );
+    return user;
   }
 
   @HttpCode(200)

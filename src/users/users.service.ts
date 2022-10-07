@@ -26,6 +26,15 @@ export class UsersService {
     private stripeService: StripeService,
   ) {}
 
+  async markEmailAsConfirmed(email: string) {
+    return this.usersRepository.update(
+      { email },
+      {
+        isEmailConfirmed: true,
+      },
+    );
+  }
+
   async updateMonthlySubscriptionStatus(
     stripeCustomerId: string,
     monthlySubscriptionStatus: string,

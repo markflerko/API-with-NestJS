@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { EmailConfirmationGuard } from 'src/email-confirmation/emailConfirmation.guard';
 import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 import RequestWithUser from '../authentication/requestWithUser.interface';
 import StripeService from '../stripe/stripe.service';
@@ -44,6 +45,7 @@ export class CreditCardsController {
 
   @Get()
   @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(EmailConfirmationGuard)
   async getCreditCards(@Req() request: RequestWithUser) {
     return this.stripeService.listCreditCards(request.user.stripeCustomerId);
   }

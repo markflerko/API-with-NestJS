@@ -17,6 +17,9 @@ class User {
   @PrimaryGeneratedColumn()
   public id?: number;
 
+  @Column({ default: false })
+  public isEmailConfirmed: boolean;
+
   @Column({ nullable: true })
   public monthlySubscriptionStatus?: string;
 
