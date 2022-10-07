@@ -17,6 +17,12 @@ class User {
   @PrimaryGeneratedColumn()
   public id?: number;
 
+  @Column()
+  public phoneNumber: string;
+
+  @Column({ default: false })
+  public isPhoneNumberConfirmed: boolean;
+
   @Column({ default: false })
   public isEmailConfirmed: boolean;
 

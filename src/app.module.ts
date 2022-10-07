@@ -27,6 +27,7 @@ import { UsersModule } from './users/users.module';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
 import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { EmailConfirmationModule } from './email-confirmation/email-confirmation
     SubscriptionsModule,
     StripeWebhookModule,
     EmailConfirmationModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],
