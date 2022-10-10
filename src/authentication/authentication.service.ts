@@ -70,10 +70,7 @@ export class AuthenticationService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      throw new HttpException(
-        'Something went wrong',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

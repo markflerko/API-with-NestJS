@@ -26,6 +26,15 @@ export class UsersService {
     private stripeService: StripeService,
   ) {}
 
+  markPhoneNumberAsConfirmed(userId: number) {
+    return this.usersRepository.update(
+      { id: userId },
+      {
+        isPhoneNumberConfirmed: true,
+      },
+    );
+  }
+
   async markEmailAsConfirmed(email: string) {
     return this.usersRepository.update(
       { email },
