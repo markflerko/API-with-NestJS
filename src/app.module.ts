@@ -28,6 +28,7 @@ import { Timestamp } from './utils/scalars/timestamp.scalar';
 import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 import { SmsModule } from './sms/sms.module';
+import { GoogleAuthenticationModule } from './google-authentication/google-authentication.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { SmsModule } from './sms/sms.module';
     StripeWebhookModule,
     EmailConfirmationModule,
     SmsModule,
+    GoogleAuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],

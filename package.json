@@ -64,6 +64,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dataloader": "^2.1.0",
+    "googleapis": "^108.0.0",
     "graphql": "^16.5.0",
     "graphql-parse-resolve-info": "^4.12.3",
     "graphql-redis-subscriptions": "^2.5.0",

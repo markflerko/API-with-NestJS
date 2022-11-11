@@ -17,6 +17,9 @@ class User {
   @PrimaryGeneratedColumn()
   public id?: number;
 
+  @Column({ default: false })
+  public isRegisteredWithGoogle: boolean;
+
   @Column()
   public phoneNumber: string;
 
@@ -50,7 +53,7 @@ class User {
   @Column()
   public name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   public password: string;
 

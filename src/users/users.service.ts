@@ -26,6 +26,19 @@ export class UsersService {
     private stripeService: StripeService,
   ) {}
 
+  async createWithGoogle(email: string, name: string): Promise<User> {
+    const stripeCustomer = await this.stripeService.createCustomer(name, email);
+
+    const newUser = await this.usersRepository.create({
+      email,
+      name,
+      isRegisteredWithGoogle: true,
+      stripeCustomerId: stripeCustomer.id,
+    });
+    await this.usersRepository.save(newUser);
+    return newUser;
+  }
+
   markPhoneNumberAsConfirmed(userId: number) {
     return this.usersRepository.update(
       { id: userId },
