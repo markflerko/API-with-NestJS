@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseController } from './database.controller';
 import { DatabaseService } from './database.service';
+import DatabaseLogger from './databaseLogger';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { DatabaseService } from './database.service';
       inject: [ConfigService],
       useFactory: () => ({
         type: 'postgres',
+        logger: new DatabaseLogger(),
         host: 'localhost',
         port: 5432,
         username: 'postgres',

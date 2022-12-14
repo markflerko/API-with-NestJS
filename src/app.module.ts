@@ -1,6 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -14,21 +14,23 @@ import { ChatModule } from './chat/chat.module';
 import { CommentsModule } from './comments/comments.module';
 import { CreditCardsModule } from './credit-cards/credit-cards.module';
 import { DatabaseModule } from './database/database.module';
+import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 import { EmailScheduleModule } from './email-schedule/email-schedule.module';
 import { EmailModule } from './email/email.module';
 import { FilesModule } from './files/files.module';
+import { GoogleAuthenticationModule } from './google-authentication/google-authentication.module';
+import { LoggerModule } from './logger/logger.module';
 import { PostsModule } from './posts/posts.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { PubSubModule } from './pub-sub/pub-sub.module';
+import { SmsModule } from './sms/sms.module';
+import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
 import { StripeModule } from './stripe/stripe.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UsersModule } from './users/users.module';
+import LogsMiddleware from './utils/logs.middleware';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
-import { StripeWebhookModule } from './stripe-webhook/stripe-webhook.module';
-import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
-import { SmsModule } from './sms/sms.module';
-import { GoogleAuthenticationModule } from './google-authentication/google-authentication.module';
 
 @Module({
   imports: [
@@ -74,8 +76,13 @@ import { GoogleAuthenticationModule } from './google-authentication/google-authe
     EmailConfirmationModule,
     SmsModule,
     GoogleAuthenticationModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LogsMiddleware).forRoutes('*');
+  }
+}

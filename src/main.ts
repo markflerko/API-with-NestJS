@@ -3,15 +3,20 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { config } from 'aws-sdk';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import CustomLogger from './logger/customLogger';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
+import getLogLevels from './utils/getLogLevels';
 import rawBodyMiddleware from './utils/rawBody.middleware';
 
 async function bootstrap() {
   const PORT = +process.env.PORT || 5000;
 
   const app = await NestFactory.create(AppModule, {
-    logger: ['verbose', 'log', 'error'],
+    logger: getLogLevels(process.env.NODE_ENV === 'production'),
+    bufferLogs: true,
   });
+
+  app.useLogger(app.get(CustomLogger));
 
   const { httpAdapter } = app.get(HttpAdapterHost);
 
