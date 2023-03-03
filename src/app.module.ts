@@ -31,6 +31,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UsersModule } from './users/users.module';
 import LogsMiddleware from './utils/logs.middleware';
 import { Timestamp } from './utils/scalars/timestamp.scalar';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { Timestamp } from './utils/scalars/timestamp.scalar';
     SmsModule,
     GoogleAuthenticationModule,
     LoggerModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService, Timestamp],
