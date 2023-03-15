@@ -2,6 +2,8 @@ import { Exclude } from 'class-transformer';
 import PublicFile from 'src/files/public-file.entity';
 import Post from 'src/posts/post.entity';
 import PrivateFile from 'src/private-files/private-file.entity';
+import Permission from 'src/users/permission.type';
+import Role from 'src/users/role.enum';
 import {
   Column,
   Entity,
@@ -16,6 +18,22 @@ import Address from './address.entity';
 class User {
   @PrimaryGeneratedColumn()
   public id?: number;
+
+  @Column({
+    type: 'enum',
+    enum: Permission,
+    array: true,
+    default: [],
+  })
+  public permissions: Permission[];
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    array: true,
+    default: [Role.Admin],
+  })
+  public roles: Role[];
 
   @Column({ nullable: true })
   public monthlySubscriptionStatus?: string;

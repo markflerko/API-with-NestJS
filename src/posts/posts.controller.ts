@@ -14,9 +14,11 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtTwoFactorGuard from 'src/authentication/jwt-two-factor.guard';
+import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 import RequestWithUser from 'src/authentication/requestWithUser.interface';
 import { PaginationParams } from 'src/types/paginationParams';
+import Role from 'src/users/role.enum';
+import RoleGuard from 'src/users/role.guard';
 import { FindOneParams } from 'src/utils/findOneParams';
 import { CreatePostDto } from './dto/create-port.dto';
 import { UpdatePostDto } from './dto/update-port.dto';
@@ -47,8 +49,7 @@ export class PostsController {
   }
 
   @Post()
-  // @UseGuards(JwtAuthenticationGuard)
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthenticationGuard)
   async createPost(@Body() dto: CreatePostDto, @Req() req: RequestWithUser) {
     return this.postsService.createPost(dto, req.user);
   }
@@ -59,6 +60,8 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard(Role.Admin))
+  // @UseGuards(PermissionGuard(PostsPermission.DeletePost))
   async deletePost(@Param('id') id: number) {
     return this.postsService.deletePost(id);
   }
