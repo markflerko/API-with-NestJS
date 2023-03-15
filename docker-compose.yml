@@ -11,6 +11,19 @@ services:
     networks:
       - postgres
 
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    networks:
+      - postgres
+
   redis:
     image: 'redis:alpine'
     ports:
@@ -24,16 +37,6 @@ services:
       - '8081:8081'
     depends_on:
       - redis
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    env_file:
-      - ./rabbitmq.env
 
 networks:
   postgres:
