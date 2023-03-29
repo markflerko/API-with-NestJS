@@ -7,6 +7,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
+import LogInDto from 'src/authentication/dto/logIn.dto';
 import { UsersService } from 'src/users/users.service';
 import { LocalAuthenticationGuard } from './authentication.guard';
 import { AuthenticationService } from './authentication.service';
@@ -60,6 +62,7 @@ export class AuthenticationController {
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
+  @ApiBody({ type: LogInDto })
   async logIn(@Req() request: RequestWithUser) {
     const { user } = request;
     const accessTokenCookie =
