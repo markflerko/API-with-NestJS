@@ -28,7 +28,9 @@ class Post {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('identity', {
+    generatedIdentity: 'ALWAYS',
+  })
   public id?: number;
 
   @Column()
