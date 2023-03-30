@@ -13,13 +13,19 @@ export class CategoryService {
   ) {}
 
   getAllCategories() {
-    return this.categoryService.find({ relations: ['posts'] });
+    return this.categoryService.find({
+      relations: {
+        posts: true,
+      },
+    });
   }
 
   async getCategoryById(id: number) {
     const category = await this.categoryService.findOne({
       where: { id },
-      relations: ['posts'],
+      relations: {
+        posts: true,
+      },
     });
     if (category) {
       return category;
@@ -31,7 +37,9 @@ export class CategoryService {
     await this.categoryService.update(id, category);
     const updatedCategory = await this.categoryService.findOne({
       where: { id },
-      relations: ['posts'],
+      relations: {
+        posts: true,
+      },
     });
     if (updatedCategory) {
       return updatedCategory;

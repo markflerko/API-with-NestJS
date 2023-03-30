@@ -2,7 +2,7 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import User from 'src/users/user.entity';
-import { FindManyOptions, MoreThan, Repository } from 'typeorm';
+import { ArrayContains, FindManyOptions, MoreThan, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-port.dto';
 import { UpdatePostDto } from './dto/update-port.dto';
 import PostNotFoundException from './exceptions/postNotFund.exception';
@@ -48,7 +48,9 @@ export class PostsService {
 
   async getPostsWithAuthors(offset?: number, limit?: number, startId?: number) {
     return this.getPosts(offset, limit, startId, {
-      relations: ['author'],
+      relations: {
+        author: true,
+      },
     });
   }
 
@@ -71,7 +73,9 @@ export class PostsService {
 
     const [items, count] = await this.postsRepository.findAndCount({
       where,
-      relations: ['author'],
+      relations: {
+        author: true,
+      },
       order: {
         id: 'ASC',
       },
@@ -86,16 +90,17 @@ export class PostsService {
   }
 
   async getPostsWithParagraph(paragraph: string) {
-    return this.postsRepository.query(
-      'SELECT * from post WHERE $1 = ANY(paragraphs)',
-      [paragraph],
-    );
+    return this.postsRepository.findBy({
+      paragraphs: ArrayContains([paragraph]),
+    });
   }
 
   async getPostById(id: number) {
     const post = await this.postsRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: {
+        author: true,
+      },
     });
 
     if (post) {
@@ -118,7 +123,9 @@ export class PostsService {
     await this.postsRepository.update(id, post);
     const updatedPost = await this.postsRepository.findOne({
       where: { id },
-      relations: ['author'],
+      relations: {
+        author: true,
+      },
     });
     if (updatedPost) {
       await this.clearCache();
