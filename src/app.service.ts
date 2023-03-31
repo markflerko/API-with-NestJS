@@ -3,12 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'не хуита!';
-  }
-  getHello1(): string {
-    return 'Hello World1!';
-  }
-  getHello2(): string {
-    return 'Hello World2!';
+    console.log(process.env.DATABASE_PORT);
+
+    return 'Hello World!';
   }
 }
